@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
 import './globals.css'
+import { RainbowkitConnection } from '@repo/evm-wallet'
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -23,7 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>{children}</body>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <RainbowkitConnection>{children}</RainbowkitConnection>
+      </body>
     </html>
   )
 }

@@ -1,8 +1,14 @@
+'use client'
 import Image from 'next/image'
 import { Button } from '@repo/ui/button'
 import styles from './page.module.css'
+import { useEvmWallet, useRainbowkitModal } from '@repo/evm-wallet'
 
 export default function Home() {
+  const { useConnectModal } = useRainbowkitModal()
+  const { openConnectModal } = useConnectModal()
+  const { account } = useEvmWallet()
+  console.log('🚀 ~ Home ~ account:', account)
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -13,6 +19,8 @@ export default function Home() {
           </li>
           <li>Save and see your changes instantly.</li>
         </ol>
+
+        {account ? <div>{account}</div> : <button onClick={() => openConnectModal?.()}>Connect</button>}
 
         <div className={styles.ctas}>
           <a
