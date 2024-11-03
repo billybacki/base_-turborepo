@@ -55,6 +55,7 @@ module.exports = {
         usePrettierrc: true
       }
     ],
+    '@typescript-eslint/no-explicit-any': 'off',
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off'

@@ -17,27 +17,14 @@ export class Currency {
   public readonly name?: string
   public readonly logo?: string
 
-  private static readonly defaultETHER: Currency = new Currency(
-    1,
-    ZERO_ADDRESS,
-    18,
-    'ETH',
-    'ETH'
-  )
+  private static readonly defaultETHER: Currency = new Currency(1, ZERO_ADDRESS, 18, 'ETH', 'ETH')
   /**
    * Constructs an instance of the base class `Currency`.
    * @param decimals decimals of the currency
    * @param symbol symbol of the currency
    * @param name of the currency
    */
-  constructor(
-    chainId: number,
-    address: string,
-    decimals: number,
-    symbol?: string,
-    name?: string,
-    logo?: string
-  ) {
+  constructor(chainId: number, address: string, decimals: number, symbol?: string, name?: string, logo?: string) {
     validateSolidityTypeInstance(JSBI.BigInt(decimals), SolidityType.uint8)
 
     this.chainId = chainId
@@ -58,13 +45,7 @@ export class Currency {
 
   public static getNativeCurrency(chainId?: number, decimals?: number) {
     if (!chainId) return this.defaultETHER
-    return new Currency(
-      chainId,
-      ZERO_ADDRESS,
-      decimals ? decimals : 18,
-      'ETH',
-      'ETH'
-    )
+    return new Currency(chainId, ZERO_ADDRESS, decimals ? decimals : 18, 'ETH', 'ETH')
   }
 
   public get isNative() {

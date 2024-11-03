@@ -14,5 +14,12 @@
       "cache": false,
       "persistent": true
     }
-  }
+  },
+  "globalEnv": [
+    "NEXT_PUBLIC_REQUEST_BASEURL",
+    "NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID",
+    "NEXT_PUBLIC_GOOGLE_ANALYTICS_ID",
+    "NEXT_PUBLIC_DEFAULT_CHAIN_ID",
+    "NEXT_PUBLIC_CHAIN_IDS"
+  ]
 }
