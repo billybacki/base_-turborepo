@@ -1,8 +1,8 @@
 'use client'
 import { SnackbarProvider, useSnackbar, VariantType } from 'notistack'
 import { createContext, useCallback, useContext } from 'react'
-import { NotificationContent } from './NotificationContent'
 import React from 'react'
+import { SnackbarContent } from './SnackbarContent'
 
 type NotificationOptions = {
   variant?: VariantType
@@ -32,31 +32,13 @@ function ANotificationProvider({ children }: { children: React.ReactNode }) {
   const notify = useCallback(
     (message: string | React.ReactNode, options?: NotificationOptions) => {
       const variant = options?.variant || 'default'
-      enqueueSnackbar('', {
+      enqueueSnackbar(message, {
         variant,
         autoHideDuration: options?.autoHideDuration || 3000,
-        anchorOrigin: options?.anchorOrigin || {
-          vertical: 'top',
-          horizontal: 'right'
-        },
-        content: key => {
-          const Content = React.forwardRef((_, ref) => (
-            <NotificationContent
-              ref={ref as React.LegacyRef<HTMLDivElement>}
-              title={options?.title}
-              key={key}
-              message={message}
-              variant={variant as 'success' | 'error' | 'warning' | 'info'}
-              onClose={() => closeSnackbar(key)}
-              action={options?.action}
-            />
-          ))
-          Content.displayName = 'NotificationContent'
-          return <Content />
-        }
+        ...options
       })
     },
-    [enqueueSnackbar, closeSnackbar]
+    [enqueueSnackbar]
   )
 
   const success = useCallback(
@@ -109,7 +91,21 @@ function ANotificationProvider({ children }: { children: React.ReactNode }) {
 
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   return (
-    <SnackbarProvider>
+    <SnackbarProvider
+      maxSnack={3}
+      autoHideDuration={3000}
+      Components={{
+        default: SnackbarContent,
+        success: SnackbarContent,
+        error: SnackbarContent,
+        warning: SnackbarContent,
+        info: SnackbarContent
+      }}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right'
+      }}
+    >
       <ANotificationProvider>{children}</ANotificationProvider>
     </SnackbarProvider>
   )

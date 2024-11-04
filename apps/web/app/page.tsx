@@ -20,7 +20,19 @@ export default function Home() {
 
         <WalletConnectButton />
 
-        <button onClick={() => success('Hello world')}>hello</button>
+        <button
+          onClick={() =>
+            success('Hello world', {
+              autoHideDuration: 1000,
+              anchorOrigin: {
+                horizontal: 'center',
+                vertical: 'top'
+              }
+            })
+          }
+        >
+          hello
+        </button>
         <button
           onClick={() =>
             error(
