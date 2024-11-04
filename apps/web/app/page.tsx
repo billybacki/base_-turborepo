@@ -2,13 +2,11 @@
 import Image from 'next/image'
 import { Button } from '@repo/ui/button'
 import styles from './page.module.css'
-import { useEvmWallet, useRainbowkitModal } from '@repo/evm-wallet'
+import { WalletConnectButton } from './components/WalletConnectButton'
+import { useNotification } from '@repo/material-ui'
 
 export default function Home() {
-  const { useConnectModal } = useRainbowkitModal()
-  const { openConnectModal } = useConnectModal()
-  const { account } = useEvmWallet()
-  console.log('🚀 ~ Home ~ account:', account)
+  const { success, error } = useNotification()
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -20,8 +18,26 @@ export default function Home() {
           <li>Save and see your changes instantly.</li>
         </ol>
 
-        {account ? <div>{account}</div> : <button onClick={() => openConnectModal?.()}>Connect</button>}
+        <WalletConnectButton />
 
+        <button onClick={() => success('Hello world')}>hello</button>
+        <button
+          onClick={() =>
+            error(
+              <>
+                <Image className={styles.logo} src="/next.svg" alt="Next.js logo" width={180} height={38} priority />
+                <ol>
+                  <li>
+                    Get started by editing <code>app/page.tsx</code>
+                  </li>
+                  <li>Save and see your changes instantly.</li>
+                </ol>
+              </>
+            )
+          }
+        >
+          error
+        </button>
         <div className={styles.ctas}>
           <a
             className={styles.primary}

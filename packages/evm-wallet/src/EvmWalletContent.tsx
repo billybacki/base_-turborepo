@@ -8,7 +8,13 @@ const EvmWalletContext = createContext<EvmWalletContextType>({
   supportedChainIds: []
 })
 
-export const useEvmWalletContext = () => useContext(EvmWalletContext)
+export const useEvmWalletContext = () => {
+  const context = useContext(EvmWalletContext)
+  if (!context) {
+    throw new Error('useEvmWalletContext must be used within a EvmWalletProvider')
+  }
+  return context
+}
 
 interface EvmWalletProviderProps {
   children: ReactNode

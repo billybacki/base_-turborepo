@@ -34,9 +34,22 @@ const wagmiConfig = createConfig({
   }
 })
 
-export function RainbowkitConnection({ children }: { children: React.ReactNode }) {
+const wagmiSSRConfig = createConfig({
+  connectors,
+  chains,
+  ssr: true,
+  transports: {
+    [sepolia.id]: http(),
+    [mainnet.id]: http()
+  }
+})
+
+export function RainbowkitConnection({ children, isSSR = false }: { children: React.ReactNode; isSSR?: boolean }) {
   return (
-    <EvmWagmiProvider wagmiConfig={wagmiConfig} supportedChainIds={chains.map(chain => chain.id)}>
+    <EvmWagmiProvider
+      wagmiConfig={isSSR ? wagmiSSRConfig : wagmiConfig}
+      supportedChainIds={chains.map(chain => chain.id)}
+    >
       <RainbowKitProvider>{children}</RainbowKitProvider>
     </EvmWagmiProvider>
   )
