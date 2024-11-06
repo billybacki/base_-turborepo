@@ -10,6 +10,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@repo/evm-wallet": "workspace:*",
     "@ebay/nice-modal-react": "1.2.8",
     "@emotion/cache": "^11.11.0",
     "@emotion/react": "^11.11.1",

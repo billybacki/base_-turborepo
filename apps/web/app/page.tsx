@@ -4,9 +4,12 @@ import { Button } from '@repo/ui/button'
 import styles from './page.module.css'
 import { WalletConnectButton } from './components/WalletConnectButton'
 import { useNotification } from '@repo/material-ui'
+import { useToken } from '@repo/evm-wallet'
 
 export default function Home() {
   const { success, error } = useNotification()
+  const { data } = useToken('0xdAC17F958D2ee523a2206206994597C13D831ec7', 1)
+  console.log('🚀 ~ Home ~ data:', data)
   return (
     <div className={styles.page}>
       <main className={styles.main}>
