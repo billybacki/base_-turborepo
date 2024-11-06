@@ -1,14 +1,8 @@
-import JSBI from 'jsbi'
-import { SolidityType } from './constants'
-import { validateSolidityTypeInstance } from './utils'
 import invariant from 'tiny-invariant'
+import { validateAndParseEVMAddress } from './utils'
 
 const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
-/**
- * A currency is any fungible financial instrument on Ethereum, including Ether and all ERC20 tokens.
- *
- * The only instance of the base class `Currency` is Ether.
- */
+
 export class Currency {
   public readonly chainId: number
   public readonly address: string
@@ -17,18 +11,13 @@ export class Currency {
   public readonly name?: string
   public readonly logo?: string
 
-  private static readonly defaultETHER: Currency = new Currency(1, ZERO_ADDRESS, 18, 'ETH', 'ETH')
-  /**
-   * Constructs an instance of the base class `Currency`.
-   * @param decimals decimals of the currency
-   * @param symbol symbol of the currency
-   * @param name of the currency
-   */
+  private static readonly defaultETHER: Currency = new Currency(1, ZERO_ADDRESS, 18, '', '')
+
   constructor(chainId: number, address: string, decimals: number, symbol?: string, name?: string, logo?: string) {
-    validateSolidityTypeInstance(JSBI.BigInt(decimals), SolidityType.uint8)
+    invariant(decimals >= 0 && decimals <= 255, 'DECIMALS ERROR')
 
     this.chainId = chainId
-    this.address = address
+    this.address = validateAndParseEVMAddress(address)
     this.decimals = decimals
     this.symbol = symbol
     this.name = name
@@ -36,19 +25,16 @@ export class Currency {
   }
 
   public equals(other: Currency): boolean {
-    // short circuit on reference equality
-    if (this === other) {
-      return true
-    }
+    if (this === other) return true
     return this.chainId === other.chainId && this.address === other.address
   }
 
-  public static getNativeCurrency(chainId?: number, decimals?: number) {
+  public static getNativeCurrency(chainId?: number, decimals?: number, symbol?: string, name?: string, logo?: string) {
     if (!chainId) return this.defaultETHER
-    return new Currency(chainId, ZERO_ADDRESS, decimals ? decimals : 18, 'ETH', 'ETH')
+    return new Currency(chainId, ZERO_ADDRESS, decimals ?? 18, symbol, name, logo)
   }
 
-  public get isNative() {
+  public get isNative(): boolean {
     return this.address === ZERO_ADDRESS
   }
 
@@ -56,5 +42,17 @@ export class Currency {
     invariant(this.chainId === other.chainId, 'CHAIN_IDS')
     invariant(this.address !== other.address, 'ADDRESSES')
     return this.address.toLowerCase() < other.address.toLowerCase()
+  }
+}
+
+export function currencyEquals(currencyA: Currency, currencyB: Currency): boolean {
+  if (currencyA instanceof Currency && currencyB instanceof Currency) {
+    return currencyA.equals(currencyB)
+  } else if (currencyA instanceof Currency) {
+    return false
+  } else if (currencyB instanceof Currency) {
+    return false
+  } else {
+    return currencyA === currencyB
   }
 }

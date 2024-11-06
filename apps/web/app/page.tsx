@@ -8,8 +8,8 @@ import { useToken } from '@repo/evm-wallet'
 
 export default function Home() {
   const { success, error } = useNotification()
-  const { data } = useToken('0xdAC17F958D2ee523a2206206994597C13D831ec7', 1)
-  console.log('🚀 ~ Home ~ data:', data)
+  const { token } = useToken('0xdAC17F958D2ee523a2206206994597C13D831ec7', 1)
+  console.log('🚀 ~ Home ~ data:', token)
   return (
     <div className={styles.page}>
       <main className={styles.main}>
