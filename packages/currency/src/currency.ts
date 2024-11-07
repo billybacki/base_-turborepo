@@ -1,19 +1,18 @@
 import invariant from 'tiny-invariant'
 import { validateAndParseEVMAddress } from './utils'
-
-const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
+import { Address, zeroAddress } from 'viem'
 
 export class Currency {
   public readonly chainId: number
-  public readonly address: string
+  public readonly address: Address
   public readonly decimals: number
   public readonly symbol?: string
   public readonly name?: string
   public readonly logo?: string
 
-  private static readonly defaultETHER: Currency = new Currency(1, ZERO_ADDRESS, 18, '', '')
+  private static readonly defaultETHER: Currency = new Currency(1, zeroAddress, 18, '', '')
 
-  constructor(chainId: number, address: string, decimals: number, symbol?: string, name?: string, logo?: string) {
+  constructor(chainId: number, address: Address, decimals: number, symbol?: string, name?: string, logo?: string) {
     invariant(decimals >= 0 && decimals <= 255, 'DECIMALS ERROR')
 
     this.chainId = chainId
@@ -31,11 +30,11 @@ export class Currency {
 
   public static getNativeCurrency(chainId?: number, decimals?: number, symbol?: string, name?: string, logo?: string) {
     if (!chainId) return this.defaultETHER
-    return new Currency(chainId, ZERO_ADDRESS, decimals ?? 18, symbol, name, logo)
+    return new Currency(chainId, zeroAddress, decimals ?? 18, symbol, name, logo)
   }
 
   public get isNative(): boolean {
-    return this.address === ZERO_ADDRESS
+    return this.address === zeroAddress
   }
 
   public sortsBefore(other: Currency): boolean {
