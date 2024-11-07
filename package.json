@@ -5,6 +5,7 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
+    "test": "pnpm turbo run test --filter=[HEAD^1]",
     "prepare": "husky install",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
