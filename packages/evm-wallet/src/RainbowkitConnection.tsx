@@ -7,6 +7,7 @@ import { walletConnectWallet, coinbaseWallet, metaMaskWallet, okxWallet } from '
 import { createConfig, http } from 'wagmi'
 import { EvmWagmiProvider } from './EvmWagmiProvider'
 import '@rainbow-me/rainbowkit/styles.css'
+import { chains } from './constants'
 
 const projectId = '41301e8365d2d65b321281fd10eab138'
 
@@ -23,8 +24,6 @@ const connectors = connectorsForWallets(
   }
 )
 
-const chains = [sepolia, mainnet] as const
-
 const wagmiConfig = createConfig({
   connectors,
   chains,
@@ -39,8 +38,8 @@ const wagmiSSRConfig = createConfig({
   chains,
   ssr: true,
   transports: {
-    [sepolia.id]: http(),
-    [mainnet.id]: http()
+    [sepolia.id]: http('https://sepolia.infura.io/v3/d6f8f688cda54a7aade4e8e4d8ece89b'),
+    [mainnet.id]: http('https://mainnet.infura.io/v3/d6f8f688cda54a7aade4e8e4d8ece89b')
   }
 })
 

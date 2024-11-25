@@ -1,11 +1,28 @@
 import { useStore } from 'zustand'
 import { createTxStore } from './store'
 import { TransactionDetails } from './types'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useEvmWallet } from '..'
 
 export function useAddRecentTransaction() {
-  return useStore(createTxStore).addTransaction
+  const addTransaction = useStore(createTxStore).addTransaction
+  const { account, chainId } = useEvmWallet()
+
+  return useCallback(
+    (summary: string, hash: string, extraKey?: string) =>
+      addTransaction({
+        chainId,
+        hash,
+        summary,
+        from: account ?? '',
+        addedTime: Date.now(),
+        lastCheckedBlockNumber: 0,
+        receipt: undefined,
+        confirmedTime: 0,
+        key: `${account}_${chainId}_${extraKey ?? ''}`
+      }),
+    [account, addTransaction, chainId]
+  )
 }
 
 export function useUpdateRecentTransaction() {
@@ -16,7 +33,7 @@ export function useClearRecentTransactions() {
   return useStore(createTxStore).clearAllTransactions
 }
 
-function useAllTransactionsByChainId(chainId: number) {
+export function useAllTransactionsByChainId(chainId: number) {
   const transactions = useStore(createTxStore).transactions
   return transactions[chainId]
 }
@@ -49,4 +66,18 @@ export function useSortedRecentTransactions() {
     [sortedRecentTransactions]
   )
   return { sortedRecentTransactions, pendingTransactions, confirmedTransactions }
+}
+
+export function useTransactionState(extraKey?: string) {
+  const { account, chainId } = useEvmWallet()
+  const transactions = useAllTransactionsByChainId(chainId)
+
+  const list = useMemo(() => {
+    return Object.values(transactions ?? {}).filter(item => item.key === `${account}_${chainId}_${extraKey ?? ''}`)
+  }, [account, chainId, extraKey, transactions])
+
+  return {
+    pending: list.some(item => !item.receipt),
+    confirmed: list.some(item => item.receipt)
+  }
 }

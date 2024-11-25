@@ -2,10 +2,12 @@ import React, { createContext, useContext, ReactNode } from 'react'
 
 interface EvmWalletContextType {
   supportedChainIds: number[]
+  showTransactionNotification: boolean
 }
 
 const EvmWalletContext = createContext<EvmWalletContextType>({
-  supportedChainIds: []
+  supportedChainIds: [],
+  showTransactionNotification: true
 })
 
 export const useEvmWalletContext = () => {
@@ -19,8 +21,19 @@ export const useEvmWalletContext = () => {
 interface EvmWalletProviderProps {
   children: ReactNode
   supportedChainIds: number[]
+  showTransactionNotification?: boolean
 }
 
-export const EvmWalletProvider = ({ children, supportedChainIds }: EvmWalletProviderProps) => {
-  return <EvmWalletContext.Provider value={{ supportedChainIds }}>{children}</EvmWalletContext.Provider>
+export const EvmWalletProvider = ({
+  children,
+  supportedChainIds,
+  showTransactionNotification
+}: EvmWalletProviderProps) => {
+  return (
+    <EvmWalletContext.Provider
+      value={{ supportedChainIds, showTransactionNotification: showTransactionNotification ?? true }}
+    >
+      {children}
+    </EvmWalletContext.Provider>
+  )
 }

@@ -3,7 +3,6 @@ import localFont from 'next/font/local'
 import './globals.css'
 import { RainbowkitConnection } from '@repo/evm-wallet'
 import { MuiThemeProvider } from '@repo/material-ui'
-import { NotificationProvider } from '@repo/material-ui'
 
 const geistSans = localFont({
   src: './fonts/GeistVF.woff',
@@ -28,9 +27,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <MuiThemeProvider isAppRouter={true}>
-          <RainbowkitConnection isSSR={true}>
-            <NotificationProvider>{children}</NotificationProvider>
-          </RainbowkitConnection>
+          <RainbowkitConnection isSSR={true}>{children}</RainbowkitConnection>
         </MuiThemeProvider>
       </body>
     </html>

@@ -3,6 +3,7 @@ import { SnackbarProvider, useSnackbar, VariantType } from 'notistack'
 import { createContext, useCallback, useContext } from 'react'
 import React from 'react'
 import { SnackbarContent } from './SnackbarContent'
+import { Link, Stack, Typography } from '@mui/material'
 
 type NotificationOptions = {
   variant?: VariantType
@@ -117,4 +118,17 @@ export const useNotification = () => {
     throw new Error('useNotification must be used within a NotificationProvider')
   }
   return context
+}
+
+export function TransactionResult({ title, link }: { title: string; link: string }) {
+  return (
+    <Stack spacing={'15px'}>
+      <Typography variant="subtitle2">{title}</Typography>
+      {link && (
+        <Link underline="always" href={link} sx={{ fontSize: '14px' }} target="_blank">
+          View on Explorer
+        </Link>
+      )}
+    </Stack>
+  )
 }

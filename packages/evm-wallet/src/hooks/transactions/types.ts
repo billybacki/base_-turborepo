@@ -4,8 +4,14 @@ export interface TransactionDetails {
   from: string
   addedTime: number
   confirmedTime?: number
-  receipt?: unknown
+  lastCheckedBlockNumber?: number
+  receipt?: {
+    status: 'success' | 'reverted'
+    from: string
+    to: string | null
+  }
   summary?: string
+  key?: string
 }
 
 export interface TransactionState {

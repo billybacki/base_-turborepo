@@ -15,11 +15,11 @@ export class CurrencyAmount {
   public readonly currency: Currency
   private readonly value: BigNumber
 
-  constructor(currency: Currency, amount: BigNumber | string | number) {
+  constructor(currency: Currency, amount: BigNumber | string | number | bigint) {
     this.currency = currency
-    const _amount = new BigNumber(amount)
+    const _amount = new BigNumber(amount.toString())
     invariant(_amount.isInteger() && _amount.gte(0), 'Amount must be a positive integer')
-    this.value = new BigNumber(amount)
+    this.value = new BigNumber(amount.toString())
   }
 
   /**
@@ -27,6 +27,10 @@ export class CurrencyAmount {
    */
   public get raw(): BigNumber {
     return this.value
+  }
+
+  public toBigint(): bigint {
+    return BigInt(this.value.toString())
   }
 
   /**
@@ -133,7 +137,7 @@ export class CurrencyAmount {
    * @param amount The raw amount
    * @returns A new CurrencyAmount instance
    */
-  public static fromRawAmount(currency: Currency, amount: string | number): CurrencyAmount {
+  public static fromRawAmount(currency: Currency, amount: string | number | bigint): CurrencyAmount {
     return new CurrencyAmount(currency, amount)
   }
 
@@ -150,5 +154,21 @@ export class CurrencyAmount {
       console.debug(`Failed to parse input amount: "${amount}"`, error)
       return undefined
     }
+  }
+
+  public lessThan(other: CurrencyAmount): boolean {
+    return this.value.lt(other.value)
+  }
+
+  public greaterThan(other: CurrencyAmount): boolean {
+    return this.value.gt(other.value)
+  }
+
+  public equals(other: CurrencyAmount): boolean {
+    return this.value.eq(other.value)
+  }
+
+  public isZero(): boolean {
+    return this.value.isZero()
   }
 }

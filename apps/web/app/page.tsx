@@ -4,12 +4,19 @@ import { Button } from '@repo/ui/button'
 import styles from './page.module.css'
 import { WalletConnectButton } from './components/WalletConnectButton'
 import { useNotification } from '@repo/material-ui'
-import { useToken } from '@repo/evm-wallet'
+import { useApproveCallback, useToken } from '@repo/evm-wallet'
+import { CurrencyAmount } from '@repo/currency'
 
 export default function Home() {
   const { success, error } = useNotification()
-  const { token } = useToken('0xdAC17F958D2ee523a2206206994597C13D831ec7', 1)
+  const { token } = useToken('0x85eDB7A0cbAcf5BD641e0FF5D6270bEf9C72Bd6B', 11155111)
   console.log('🚀 ~ Home ~ data:', token)
+  const { approvalState, approve, approveWithModal } = useApproveCallback(
+    token ? CurrencyAmount.fromAmount(token, '100') : undefined,
+    '0x70B6c88f608AC228Fd767d05094967eb91d02583'
+  )
+  console.log('🚀 ~ Home ~ approvalState:', approvalState)
+
   return (
     <div className={styles.page}>
       <main className={styles.main}>
@@ -22,6 +29,9 @@ export default function Home() {
         </ol>
 
         <WalletConnectButton />
+
+        <button onClick={approve}>approve</button>
+        <button onClick={approveWithModal}>approveWithModal</button>
 
         <button
           onClick={() =>
