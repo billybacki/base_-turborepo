@@ -5,6 +5,6 @@
     "jsx": "react-jsx",
     "moduleResolution": "bundler"
   },
-  "include": ["./src/**/*.ts", "./src/declarations.d.ts"],
+  "include": ["./src/**/*.ts", "./src/declarations.d.ts", "./src/components/ConnectWalletButton.tsx"],
   "exclude": ["node_modules", "dist"]
 }

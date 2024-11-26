@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { createWeb3Modal } from '@web3modal/wagmi/react'
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
 
-export const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || ''
+export const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || 'a59c8175d00c0b98d98b358332bcde08'
 
 const metadata = {
   name: 'base app',
