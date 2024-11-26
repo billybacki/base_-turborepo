@@ -9,7 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@repo/ui": "workspace:*",
     "@repo/currency": "workspace:*",
     "@repo/material-ui": "workspace:*",
     "@repo/evm-wallet": "workspace:*",
@@ -26,7 +25,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.18",
-    "eslint": "^8",
+    "eslint": "^8.0.0",
     "eslint-config-next": "14.2.6",
     "typescript": "5.5.4"
   }

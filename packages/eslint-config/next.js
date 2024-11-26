@@ -19,7 +19,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:react/recommended',
     'plugin:prettier/recommended',
-    require.resolve('@vercel/style-guide/eslint/next'),
+    // require.resolve('@vercel/style-guide/eslint/next'),
     'turbo'
   ],
   globals: {
