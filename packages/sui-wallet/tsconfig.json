@@ -1,0 +1,10 @@
+{
+  "extends": "@repo/typescript-config/sdk.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler"
+  },
+  "include": ["./src/**/*.ts", "./src/declarations.d.ts"],
+  "exclude": ["node_modules", "dist"]
+}
