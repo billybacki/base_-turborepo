@@ -1,4 +1,4 @@
-import { CurrencyAmount } from '@repo/currency'
+import { Currency, CurrencyAmount } from '@repo/currency'
 import { Address, erc20Abi, maxUint256 } from 'viem'
 import { useEvmWallet } from '../useWallet'
 import { useCallback, useMemo } from 'react'
@@ -10,7 +10,7 @@ import { useAddRecentTransaction, useTransactionState } from '../transactions/ho
 
 type ApprovalState = 'UNKNOWN' | 'NOT_APPROVED' | 'PENDING' | 'APPROVED'
 
-export function useApproveCallback(amountToApprove?: CurrencyAmount, spender?: Address, useExact?: boolean) {
+export function useApproveCallback(amountToApprove?: CurrencyAmount<Currency>, spender?: Address, useExact?: boolean) {
   const { account } = useEvmWallet()
   const simulateContractCallback = useSimulateContractCallback()
   const isNative = useMemo(() => !!amountToApprove?.currency?.isNative, [amountToApprove?.currency?.isNative])

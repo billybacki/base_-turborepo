@@ -18,7 +18,10 @@ export function useTokenAllowance(token?: Currency, owner?: Address, spender?: A
     }
   })
 
-  const allowance = useMemo(() => (data && token ? new CurrencyAmount(token, data) : undefined), [data, token])
+  const allowance = useMemo(
+    () => (data !== undefined && token ? new CurrencyAmount(token, data) : undefined),
+    [data, token]
+  )
 
   return {
     data: allowance,

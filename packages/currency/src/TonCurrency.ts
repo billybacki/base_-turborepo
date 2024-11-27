@@ -29,15 +29,10 @@ export class TonCurrency {
 
   public static getNativeCurrency(chainId?: number, decimals?: number, symbol?: string, name?: string, logo?: string) {
     if (!chainId) return this.defaultETHER
-    return new TonCurrency(chainId, zeroAddress, decimals ?? 18, symbol, name, logo)
+    return new TonCurrency(zeroAddress, decimals ?? 18, symbol, name, logo)
   }
 
   public get isNative(): boolean {
     return this.address === zeroAddress
-  }
-
-  public sortsBefore(other: TonCurrency): boolean {
-    invariant(this.address !== other.address, 'ADDRESSES')
-    return this.address.toLowerCase() < other.address.toLowerCase()
   }
 }
