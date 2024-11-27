@@ -1,6 +1,5 @@
 'use client'
 import Image from 'next/image'
-import { Button } from '@repo/ui/button'
 import styles from './page.module.css'
 import { WalletConnectButton } from './components/WalletConnectButton'
 import { useNotification } from '@repo/material-ui'
@@ -82,9 +81,7 @@ export default function Home() {
             Read our docs
           </a>
         </div>
-        <Button appName="web" className={styles.secondary}>
-          Open alert
-        </Button>
+        <button className={styles.secondary}>Open alert</button>
       </main>
       <footer className={styles.footer}>
         <a
