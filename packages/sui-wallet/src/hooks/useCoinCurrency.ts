@@ -1,6 +1,6 @@
 import { useSuiClientQuery } from '@mysten/dapp-kit'
 import { SUI_COIN } from '../constants'
-import { Currency } from '../constants/currency'
+import { Currency } from '../constants/SuiCurrency'
 
 export function useCoinCurrency(coinType?: string) {
   const address = coinType ?? SUI_COIN

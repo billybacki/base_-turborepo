@@ -2,7 +2,7 @@ import { normalizeSuiAddress } from '@mysten/sui/utils'
 import JSBI from 'jsbi'
 import invariant from 'tiny-invariant'
 import { BigintIsh, SolidityType, ZERO } from '../constants'
-import { Currency } from '../constants/currency'
+import { Currency } from '../constants/SuiCurrency'
 import { CurrencyAmount } from '../constants/currencyAmount'
 import BigNumber from 'bignumber.js'
 
