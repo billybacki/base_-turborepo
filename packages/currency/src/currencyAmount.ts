@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js'
 import invariant from 'tiny-invariant'
 import { Currency } from './currency'
 import { parseAmount } from './utils'
+import { TonCurrency } from './TonCurrency'
 
 BigNumber.config({
   DECIMAL_PLACES: 18,
@@ -11,11 +12,11 @@ BigNumber.config({
   POW_PRECISION: 100
 })
 
-export class CurrencyAmount {
-  public readonly currency: Currency
+export class CurrencyAmount<T extends Currency | TonCurrency> {
+  public readonly currency: T
   private readonly value: BigNumber
 
-  constructor(currency: Currency, amount: BigNumber | string | number | bigint) {
+  constructor(currency: T, amount: BigNumber | string | number | bigint) {
     this.currency = currency
     const _amount = new BigNumber(amount.toString())
     invariant(_amount.isInteger() && _amount.gte(0), 'Amount must be a positive integer')
@@ -39,7 +40,7 @@ export class CurrencyAmount {
    * @throws If currencies are not the same
    * @returns A new CurrencyAmount
    */
-  public add(other: CurrencyAmount): CurrencyAmount {
+  public add(other: CurrencyAmount<T>): CurrencyAmount<T> {
     invariant(this.currency.equals(other.currency), 'TOKEN')
     return new CurrencyAmount(this.currency, this.value.plus(other.value))
   }
@@ -50,7 +51,7 @@ export class CurrencyAmount {
    * @throws If currencies are not the same or if result would be negative
    * @returns A new CurrencyAmount
    */
-  public subtract(other: CurrencyAmount): CurrencyAmount {
+  public subtract(other: CurrencyAmount<T>): CurrencyAmount<T> {
     invariant(this.currency.equals(other.currency), 'TOKEN')
     const _val = this.value.minus(other.value)
     invariant(_val.gte(0), 'The result is negative')
@@ -62,7 +63,7 @@ export class CurrencyAmount {
    * @param other The value to multiply by (CurrencyAmount, BigNumber, string, or number)
    * @returns A new CurrencyAmount
    */
-  public multiply(other: CurrencyAmount | BigNumber | string | number): CurrencyAmount {
+  public multiply(other: CurrencyAmount<T> | BigNumber | string | number): CurrencyAmount<T> {
     const multiplier = other instanceof CurrencyAmount ? other.value : new BigNumber(other)
     return new CurrencyAmount(this.currency, this.value.multipliedBy(multiplier).integerValue(BigNumber.ROUND_DOWN))
   }
@@ -73,7 +74,7 @@ export class CurrencyAmount {
    * @throws If divisor is zero
    * @returns A new CurrencyAmount
    */
-  public divide(other: CurrencyAmount | BigNumber | string | number): CurrencyAmount {
+  public divide(other: CurrencyAmount<T> | BigNumber | string | number): CurrencyAmount<T> {
     const divisor = other instanceof CurrencyAmount ? other.value : new BigNumber(other)
     invariant(!divisor.isZero(), 'The division cannot be zero')
     return new CurrencyAmount(this.currency, this.value.dividedBy(divisor).integerValue(BigNumber.ROUND_DOWN))
@@ -137,7 +138,10 @@ export class CurrencyAmount {
    * @param amount The raw amount
    * @returns A new CurrencyAmount instance
    */
-  public static fromRawAmount(currency: Currency, amount: string | number | bigint): CurrencyAmount {
+  public static fromRawAmount<T extends Currency | TonCurrency>(
+    currency: T,
+    amount: string | number | bigint
+  ): CurrencyAmount<T> {
     return new CurrencyAmount(currency, amount)
   }
 
@@ -147,7 +151,10 @@ export class CurrencyAmount {
    * @param amount The human readable amount
    * @returns A new CurrencyAmount instance or undefined if parsing fails
    */
-  public static fromAmount(currency: Currency, amount: string | number): CurrencyAmount | undefined {
+  public static fromAmount<T extends Currency | TonCurrency>(
+    currency: T,
+    amount: string | number
+  ): CurrencyAmount<T> | undefined {
     try {
       return new CurrencyAmount(currency, parseAmount(amount.toString(), currency.decimals))
     } catch (error) {
@@ -156,15 +163,15 @@ export class CurrencyAmount {
     }
   }
 
-  public lessThan(other: CurrencyAmount): boolean {
+  public lessThan(other: CurrencyAmount<T>): boolean {
     return this.value.lt(other.value)
   }
 
-  public greaterThan(other: CurrencyAmount): boolean {
+  public greaterThan(other: CurrencyAmount<T>): boolean {
     return this.value.gt(other.value)
   }
 
-  public equals(other: CurrencyAmount): boolean {
+  public equals(other: CurrencyAmount<T>): boolean {
     return this.value.eq(other.value)
   }
 
