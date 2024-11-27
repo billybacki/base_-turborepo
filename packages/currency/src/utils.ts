@@ -1,6 +1,7 @@
 import invariant from 'tiny-invariant'
 import BigNumber from 'bignumber.js'
 import { Address, getAddress, parseUnits } from 'viem'
+import { normalizeSuiAddress } from '@mysten/sui/dist/cjs/utils'
 
 export function validateAndParseEVMAddress(address: string): Address {
   try {
@@ -21,4 +22,20 @@ export function parseAmount(value: string, decimals = 18): BigNumber {
   // return new BigNumber(parts.join('.'))
 
   return new BigNumber(parseUnits(value, decimals).toString())
+}
+
+export function formatCoinAddress(coinAddress: string) {
+  const [address, module, type] = coinAddress.split('::')
+
+  const normalizedAddress = normalizeSuiAddress(address || '')
+
+  return {
+    address: `${normalizedAddress}::${module}::${type}`,
+    module,
+    type
+  }
+}
+
+export const isSuiAddress = (address: string) => {
+  return address.endsWith('2::sui::SUI')
 }
