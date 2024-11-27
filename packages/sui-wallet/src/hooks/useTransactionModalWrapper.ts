@@ -5,7 +5,6 @@ import { useSuiClientMutation } from '@mysten/dapp-kit'
 export function useTransactionModalWrapper<T extends any[]>(
   event: (...args: T) => Promise<{
     hash: string
-    signature: string
   }>,
   option?: {
     hideSuccessTip?: boolean
@@ -17,7 +16,7 @@ export function useTransactionModalWrapper<T extends any[]>(
   }
 ) {
   const { open } = useTransactionModal()
-  const { mutateAsync } = useSuiClientMutation('executeTransactionBlock')
+  const { mutateAsync } = useSuiClientMutation('getTransactionBlock')
   const handleTransaction = async (...args: T) => {
     try {
       open({
@@ -26,7 +25,7 @@ export function useTransactionModalWrapper<T extends any[]>(
         status: 'pending'
       })
 
-      const { hash, signature } = await event(...args)
+      const { hash } = await event(...args)
 
       const output = await new Promise<any>((resolve, reject) => {
         open({
@@ -37,7 +36,7 @@ export function useTransactionModalWrapper<T extends any[]>(
           onClose: () => reject('user cancel')
         })
 
-        mutateAsync({ signature: signature, transactionBlock: hash })
+        mutateAsync({ digest: hash })
           .then(receipt => {
             resolve(receipt)
           })
