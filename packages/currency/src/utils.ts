@@ -1,7 +1,7 @@
 import invariant from 'tiny-invariant'
 import BigNumber from 'bignumber.js'
 import { Address, getAddress, parseUnits } from 'viem'
-import { normalizeSuiAddress } from '@mysten/sui/dist/cjs/utils'
+import { normalizeSuiAddress } from '@mysten/sui/utils'
 
 export function validateAndParseEVMAddress(address: string): Address {
   try {
