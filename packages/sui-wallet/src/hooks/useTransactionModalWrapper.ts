@@ -16,7 +16,7 @@ export function useTransactionModalWrapper<T extends any[]>(
   }
 ) {
   const { open } = useTransactionModal()
-  const { mutateAsync } = useSuiClientMutation('getTransactionBlock')
+  const { mutateAsync } = useSuiClientMutation('waitForTransaction')
   const handleTransaction = async (...args: T) => {
     try {
       open({
