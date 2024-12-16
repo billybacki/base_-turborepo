@@ -121,8 +121,9 @@ export class CurrencyAmount<T extends Currency | TonCurrency> {
    * Converts raw value to human readable value by dividing by 10^decimals
    */
   private get readableValue(): BigNumber {
-    const divisor = new BigNumber(10).pow(this.currency.decimals)
-    return this.value.dividedBy(divisor)
+    // const divisor = new BigNumber(10).pow(this.currency.decimals)
+    // return this.value.dividedBy(divisor)
+    return this.value.shiftedBy(-this.currency.decimals)
   }
 
   /**
