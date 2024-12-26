@@ -1,6 +1,6 @@
 import { useConfig, useReadContracts } from 'wagmi'
 import { Address, erc20Abi } from 'viem'
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { Config, getBalance } from '@wagmi/core'
 import { useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount } from '@repo/currency'
@@ -54,8 +54,8 @@ export function useToken(address: Address, chainId: number) {
  * @returns CurrencyAmount instance
  */
 export function useCurrencyBalance(account: string, currency: Currency | undefined) {
-  const { balances } = useCurrencyBalances(account, [currency])
-  return balances[0]
+  const { balances, refetchBalances, isLoading } = useCurrencyBalances(account, [currency])
+  return { balances: balances[0], refetchBalances, isLoading }
 }
 
 /**
@@ -68,7 +68,11 @@ export function useCurrencyBalances(account: string, currencies: (Currency | und
   const wagmiConfig = useConfig() as Config
 
   const tokens = useMemo(() => currencies.filter(currency => currency && !currency?.isNative), [currencies])
-  const { data: tokensBalances, isLoading: isLoadingCurrencyBalances } = useReadContracts({
+  const {
+    data: tokensBalances,
+    isLoading: isLoadingCurrencyBalances,
+    refetch
+  } = useReadContracts({
     allowFailure: true,
     contracts: tokens.map(currency => ({
       address: currency?.isNative ? undefined : currency?.address,
@@ -85,14 +89,18 @@ export function useCurrencyBalances(account: string, currencies: (Currency | und
   const currencyBalanceMaps = useMemo(() => {
     return tokens?.reduce<Record<string, string>>((memo, token, i) => {
       const value = tokensBalances?.[i]?.result?.toString()
-      if (value && token?.address) memo[token.address] = value
+      if (value && token?.address) memo[token.address + token.chainId] = value
       return memo
     }, {})
   }, [tokens, tokensBalances])
 
   const nativeCurrencies = useMemo(() => currencies.filter(currency => currency?.isNative), [currencies])
 
-  const { data: nativeCurrencyBalances, isLoading: isLoadingNativeCurrencyBalance } = useQuery({
+  const {
+    data: nativeCurrencyBalances,
+    isLoading: isLoadingNativeCurrencyBalance,
+    refetch: refetchNative
+  } = useQuery({
     queryKey: ['nativeCurrencyBalances', account, nativeCurrencies.map(currency => currency?.chainId)],
     queryFn: async () => {
       const balances = await Promise.all(
@@ -117,10 +125,15 @@ export function useCurrencyBalances(account: string, currencies: (Currency | und
         nativeIndex++
         return value ? CurrencyAmount.fromRawAmount(currency, value) : undefined
       }
-      const bal = currencyBalanceMaps?.[currency.address]
+      const bal = currencyBalanceMaps?.[currency.address + currency.chainId]
       return bal ? CurrencyAmount.fromRawAmount(currency, bal) : undefined
     })
   }, [currencies, currencyBalanceMaps, nativeCurrencyBalances])
 
-  return { balances, isLoading: isLoadingCurrencyBalances || isLoadingNativeCurrencyBalance }
+  const refetchBalances = useCallback(() => {
+    refetch()
+    refetchNative()
+  }, [refetch, refetchNative])
+
+  return { balances, isLoading: isLoadingCurrencyBalances || isLoadingNativeCurrencyBalance, refetchBalances }
 }
